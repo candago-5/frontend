@@ -1,104 +1,157 @@
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useRef } from 'react';
 import {
-  Dimensions,
+  Animated,
   Image,
-  ImageBackground,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View
 } from 'react-native';
+import { Colors } from './constants/colors';
+import { NavigationProvider, useNavigation } from './contexts/NavigationContext';
+import { useCamera } from './hooks/useCamera';
+import { LoginScreen } from './screens/LoginScreen';
+import { OnboardingScreen } from './screens/OnboardingScreen';
 
-const { width, height } = Dimensions.get('window');
 
-export default function LoginScreen() {
+const AppWithCamera: React.FC = () => {
+  const { takePhoto } = useCamera();
+
+  const handleQuickRegister = async () => {
+    try {
+      const photoUri = await takePhoto();
+      if (photoUri) {
+        console.log('Foto tirada:', photoUri);
+      }
+    } catch (error) {
+      console.error('Erro ao tirar foto:', error);
+    }
+  };
+
   return (
-    <ImageBackground
-      source={require('../assets/images/dog-park-background.png')}
-      style={styles.container}
-      resizeMode="cover"
-    >
-      {/* Main Login Panel */}
-      <View style={styles.loginPanel}>
-        {/* Logo */}
-        <View style={styles.logoContainer}>
-          <View style={styles.logoBox}>
-            <Image
-              source={require('../assets/images/dog-spotter-logo.png')}
-              style={styles.logoImage}
-              resizeMode="contain"
-            />
-          </View>
-        </View>
+    <NavigationProvider>
+      <AppContentWithCamera onQuickRegister={handleQuickRegister} />
+    </NavigationProvider>
+  );
+};
 
-        {/* Login Button */}
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
+const AppContentWithCamera: React.FC<{ onQuickRegister: () => void }> = ({ onQuickRegister }) => {
+  const { currentScreen, navigateTo } = useNavigation();
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+
+  const handleAccessAccount = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      navigateTo('login');
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const renderCurrentScreen = () => {
+    switch (currentScreen) {
+      case 'onboarding':
+        return (
+          <OnboardingScreen
+            onQuickRegister={onQuickRegister}
+            onAccessAccount={handleAccessAccount}
+          />
+        );
+      case 'login':
+      case 'register':
+        return <LoginScreen />;
+      default:
+        return (
+          <OnboardingScreen
+            onQuickRegister={onQuickRegister}
+            onAccessAccount={handleAccessAccount}
+          />
+        );
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.topSection}>
+        <View style={styles.dogContainer}>
+        </View>
       </View>
 
-      {/* Camera Button */}
-      <TouchableOpacity style={styles.cameraButton}>
-        <Ionicons name="camera" size={24} color="white" />
-      </TouchableOpacity>
-    </ImageBackground>
+      <Animated.View style={[styles.bottomSection, { opacity: fadeAnim }]}>
+        {renderCurrentScreen()}
+      </Animated.View>
+
+      <View style={styles.dogImageContainer}>
+        <Image
+          source={require('../assets/images/bigo.png')}
+          style={styles.dogImage}
+          resizeMode="contain"
+        />
+      </View>
+    </View>
   );
+};
+
+export default function App() {
+  return <AppWithCamera />;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  topSection: {
+    flex: 0.4,
+    backgroundColor: Colors.lightBlue,
     justifyContent: 'center',
     alignItems: 'center',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    position: 'relative',
   },
-  loginPanel: {
+  dogContainer: {
+    marginTop: -150,
+    width: 300,
+    height: 300,
+    backgroundColor: Colors.yellow,
+    borderRadius: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  dogImageContainer: {
     position: 'absolute',
-    top: height * 0.15,
-    left: width * 0.1,
-    right: width * 0.1,
-    backgroundColor: '#2D5016',
-    borderRadius: 20,
-    padding: 30,
-    alignItems: 'center',
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  logoBox: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoImage: {
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -100 }, { translateY: -100 }],
     width: 200,
-    height: 80,
-  },
-  loginButton: {
-    backgroundColor: '#FFA500',
-    paddingHorizontal: 40,
-    paddingVertical: 12,
-    borderRadius: 25,
-    width: '100%',
-    alignItems: 'center',
-  },
-  loginButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  cameraButton: {
-    position: 'absolute',
-    bottom: height * 0.1,
-    alignSelf: 'center',
-    width: 60,
-    height: 60,
-    backgroundColor: '#2D5016',
-    borderRadius: 30,
-    alignItems: 'center',
+    height: 200,
+    zIndex: 10,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dogImage: {
+    width: 400,
+    height: 400,
+    marginTop: -415,
+  },
+  bottomSection: {
+    flex: 0.6,
+    backgroundColor: Colors.background,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    marginTop: -50,
+    zIndex: 5,
   },
 });
