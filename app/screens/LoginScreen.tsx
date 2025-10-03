@@ -1,13 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { Button } from '../components/Button';
 import { InputField } from '../components/InputField';
@@ -18,7 +18,7 @@ import { Typography } from '../constants/typography';
 import { useNavigation } from '../contexts/NavigationContext';
 
 export const LoginScreen: React.FC = () => {
-  const { goBack, currentScreen } = useNavigation();
+  const { goBack, currentScreen, navigateTo } = useNavigation();
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(
     currentScreen === 'register' ? 'register' : 'login'
   );
@@ -29,7 +29,7 @@ export const LoginScreen: React.FC = () => {
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    console.log('Login:', { email, password, keepLoggedIn });
+    navigateTo('map');
   };
 
   const handleRegister = () => {

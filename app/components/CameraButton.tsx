@@ -13,10 +13,8 @@ export default function CameraButton({ onPress }: { onPress?: () => void }) {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    bottom: 32,
-    alignSelf: 'center',
-    zIndex: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     backgroundColor: '#2C3E50',

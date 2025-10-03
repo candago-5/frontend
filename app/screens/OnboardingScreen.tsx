@@ -1,27 +1,66 @@
-
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import CameraButton from '../components/CameraButton';
-import CustomMapView from '../components/MapView';
-import ProfileIcon from '../components/ProfileIcon';
-import SearchBar from '../components/SearchBar';
+import {
+  StyleSheet,
+  View
+} from 'react-native';
+import { Button } from '../components/Button';
+import { Logo } from '../components/Logo';
 
-const OnboardingScreen: React.FC = () => {
+interface OnboardingScreenProps {
+  onQuickRegister: () => void;
+  onAccessAccount: () => void;
+}
+
+export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
+  onQuickRegister,
+  onAccessAccount,
+}) => {
   return (
     <View style={styles.container}>
-      <CustomMapView />
-      <ProfileIcon />
-      <SearchBar />
-      <CameraButton />
+      <View style={styles.logoContainer}>
+        <Logo />
+      </View>
+
+      <View style={styles.buttonsContainer}>
+        <Button
+          title="Registro rápido"
+          onPress={onQuickRegister}
+          variant="primary"
+          icon="camera-outline"
+          style={styles.quickRegisterButton}
+        />
+
+        <Button
+          title="Acessar minha conta"
+          onPress={onAccessAccount}
+          variant="outline"
+          style={styles.accessAccountButton}
+        />
+      </View>
     </View>
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F6FA',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  logoContainer: {
+    marginBottom: 60,
+    alignItems: 'center',
+  },
+  buttonsContainer: {
+    width: '100%',
+    gap: 16,
+  },
+  quickRegisterButton: {
+    marginBottom: 8,
+  },
+  accessAccountButton: {
+    marginBottom: 8,
   },
 });
 

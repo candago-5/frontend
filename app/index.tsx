@@ -9,7 +9,8 @@ import { Colors } from './constants/colors';
 import { NavigationProvider, useNavigation } from './contexts/NavigationContext';
 import { useCamera } from './hooks/useCamera';
 import { LoginScreen } from './screens/LoginScreen';
-import { OnboardingScreen } from './screens/OnboardingScreen';
+import MapScreen from './screens/MapScreen';
+import OnboardingScreen from './screens/OnboardingScreen';
 
 
 const AppWithCamera: React.FC = () => {
@@ -64,6 +65,8 @@ const AppContentWithCamera: React.FC<{ onQuickRegister: () => void }> = ({ onQui
       case 'login':
       case 'register':
         return <LoginScreen />;
+      case 'map':
+        return <MapScreen />;
       default:
         return (
           <OnboardingScreen
@@ -76,22 +79,25 @@ const AppContentWithCamera: React.FC<{ onQuickRegister: () => void }> = ({ onQui
 
   return (
     <View style={styles.container}>
-      <View style={styles.topSection}>
-        <View style={styles.dogContainer}>
-        </View>
-      </View>
-
-      <Animated.View style={[styles.bottomSection, { opacity: fadeAnim }]}>
+      {/* Exibe o cachorro apenas nas telas de onboarding, login e registro */}
+      {(currentScreen === 'onboarding' || currentScreen === 'login' || currentScreen === 'register') && (
+        <>
+          <View style={styles.topSection}>
+            <View style={styles.dogContainer}>
+            </View>
+          </View>
+          <View style={styles.dogImageContainer}>
+            <Image
+              source={require('../assets/images/bigo.png')}
+              style={styles.dogImage}
+              resizeMode="contain"
+            />
+          </View>
+        </>
+      )}
+      <Animated.View style={[styles.bottomSection, { opacity: fadeAnim }]}> 
         {renderCurrentScreen()}
       </Animated.View>
-
-      <View style={styles.dogImageContainer}>
-        <Image
-          source={require('../assets/images/bigo.png')}
-          style={styles.dogImage}
-          resizeMode="contain"
-        />
-      </View>
     </View>
   );
 };

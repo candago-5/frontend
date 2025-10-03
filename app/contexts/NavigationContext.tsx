@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-export type ScreenType = 'onboarding' | 'login' | 'register';
+export type ScreenType = 'onboarding' | 'login' | 'register' | 'map';
 
 interface NavigationContextType {
   currentScreen: ScreenType;
