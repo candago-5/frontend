@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import CameraButton from './CameraButton';
-import InputField from './InputField';
-// Se estiver usando web, troque por um componente de mapa web, como leaflet/react-leaflet
 import MapView, { Marker } from 'react-native-maps';
+import CameraButton from './components/CameraButton';
+import { InputField } from './components/InputField';
 
 const markers = [
-  { id: 1, latitude: -23.527, longitude: -46.933, icon: require('../../assets/images/dog.png') },
-  { id: 2, latitude: -23.528, longitude: -46.934, icon: require('../../assets/images/dog.png') },
+  { id: 1, latitude: -23.527, longitude: -46.933, icon: require('../assets/images/dog.png') },
+  { id: 2, latitude: -23.528, longitude: -46.934, icon: require('../assets/images/dog.png') },
   // Adicione mais marcadores conforme necessário
 ];
 
-export default function CustomMapView() {
+export default function Map() {
   const [search, setSearch] = useState('');
+  
   return (
     <View style={styles.container}>
       <MapView
@@ -52,9 +52,11 @@ export default function CustomMapView() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    minHeight: 500,
   },
   map: {
     flex: 1,
+    minHeight: 400,
   },
   bottomBar: {
     position: 'absolute',

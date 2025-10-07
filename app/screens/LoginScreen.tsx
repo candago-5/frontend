@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -15,13 +16,13 @@ import { Logo } from '../components/Logo';
 import { TabButton } from '../components/TabButton';
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
-import { useNavigation } from '../contexts/NavigationContext';
 
-export const LoginScreen: React.FC = () => {
-  const { goBack, currentScreen, navigateTo } = useNavigation();
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>(
-    currentScreen === 'register' ? 'register' : 'login'
-  );
+interface LoginScreenProps {
+  onLoginSuccess?: () => void;
+}
+
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
@@ -29,7 +30,9 @@ export const LoginScreen: React.FC = () => {
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
   const handleLogin = () => {
-    navigateTo('map');
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    }
   };
 
   const handleRegister = () => {
@@ -45,7 +48,7 @@ export const LoginScreen: React.FC = () => {
   };
 
   const handleBack = () => {
-    goBack();
+    router.back();
   };
 
   return (
