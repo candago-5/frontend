@@ -20,8 +20,11 @@ const AppContent: React.FC = () => {
       const photoUri = await takePhoto();
       if (photoUri) {
         console.log('Foto tirada:', photoUri);
-        // Navigate to map after taking photo
-        router.push('/Map');
+        // Navigate to register dog screen after taking photo
+        router.push({
+          pathname: '/registerdog',
+          params: { photoUri }
+        });
       }
     } catch (error) {
       console.error('Erro ao tirar foto:', error);
