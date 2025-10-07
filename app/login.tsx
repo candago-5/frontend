@@ -1,47 +1,21 @@
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
 import {
-  Animated,
-  Image,
-  ScrollView,
-  StyleSheet,
-  View
+    Animated,
+    Image,
+    ScrollView,
+    StyleSheet,
+    View
 } from 'react-native';
 import { Colors } from './constants/colors';
-import { useCamera } from './hooks/useCamera';
-import { OnboardingScreen } from './screens/OnboardingScreen';
+import { LoginScreen } from './screens/LoginScreen';
 
-const AppContent: React.FC = () => {
-  const { takePhoto } = useCamera();
+export default function Login() {
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  const handleQuickRegister = async () => {
-    try {
-      const photoUri = await takePhoto();
-      if (photoUri) {
-        console.log('Foto tirada:', photoUri);
-        // Navigate to map after taking photo
-        router.push('/Map');
-      }
-    } catch (error) {
-      console.error('Erro ao tirar foto:', error);
-    }
-  };
-
-  const handleAccessAccount = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true,
-    }).start(() => {
-      // Navigate to login screen
-      router.push('/login');
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    });
+  const handleLoginSuccess = () => {
+    // Navigate to map after successful login
+    router.push('/Map');
   };
 
   return (
@@ -63,18 +37,11 @@ const AppContent: React.FC = () => {
           />
         </View>
         <Animated.View style={[styles.contentSection, { opacity: fadeAnim }]}> 
-          <OnboardingScreen
-            onQuickRegister={handleQuickRegister}
-            onAccessAccount={handleAccessAccount}
-          />
+          <LoginScreen onLoginSuccess={handleLoginSuccess} />
         </Animated.View>
       </ScrollView>
     </View>
   );
-};
-
-export default function Index() {
-  return <AppContent />;
 }
 
 const styles = StyleSheet.create({

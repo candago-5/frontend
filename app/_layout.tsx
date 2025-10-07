@@ -3,7 +3,6 @@ import { Stack } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
-
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -24,5 +23,29 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack />;
+  return (
+    <Stack>
+      <Stack.Screen 
+        name="index" 
+        options={{ 
+          title: 'DogSpotter',
+          headerShown: false 
+        }} 
+      />
+      <Stack.Screen 
+        name="login" 
+        options={{ 
+          title: 'Login',
+          headerShown: false 
+        }} 
+      />
+      <Stack.Screen 
+        name="Map" 
+        options={{ 
+          title: 'Map',
+          headerShown: false 
+        }} 
+      />
+    </Stack>
+  );
 }

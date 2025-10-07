@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-    StyleSheet,
-    View
+  StyleSheet,
+  View
 } from 'react-native';
 import { Button } from '../components/Button';
 import { Logo } from '../components/Logo';
