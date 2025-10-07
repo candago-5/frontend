@@ -6,6 +6,7 @@ import {
 import { Button } from '../components/Button';
 import { Logo } from '../components/Logo';
 
+
 interface OnboardingScreenProps {
   onQuickRegister: () => void;
   onAccessAccount: () => void;

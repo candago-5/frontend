@@ -35,8 +35,12 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
     }
   };
 
+  // onQuickRegister deve acionar o fluxo que você já tem (abre câmera)
+  // aqui mantemos só a navegação por conveniência (chame onQuickRegister da UI)
   const onQuickRegister = () => {
-        console.log('Quick register clicked - camera will open');
+    // se o seu fluxo já abre a câmera, pode manter vazio ou iniciar o fluxo da câmera aqui
+    // Exemplo simples: navegar para a tela de câmera/registro quando já houver foto
+    // navigateTo('register');
   };
 
   return (
@@ -48,7 +52,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
 
 export const useNavigation = () => {
   const context = useContext(NavigationContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useNavigation must be used within a NavigationProvider');
   }
   return context;
