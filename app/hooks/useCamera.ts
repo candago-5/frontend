@@ -1,4 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Platform } from 'react-native';
@@ -7,31 +8,58 @@ export const useCamera = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const requestPermissions = async () => {
+  const requestCameraPermission = async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permissão necessária', 'Precisamos da permissão da câmera para tirar fotos.', [{ text: 'OK' }]);
+        Alert.alert(
+          'Permissão necessária',
+          'Precisamos da permissão da câmera para tirar fotos.',
+          [{ text: 'OK' }]
+        );
         return false;
       }
     }
     return true;
   };
 
-  const navigateToRegisterdog = (uri: string) => {
+  const requestLocation = async () => {
     try {
-      router.push(`/registerdog?photoUri=${encodeURIComponent(uri)}`);
-      console.log('[useCamera] router.push -> /registerdog with photoUri');
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.warn('[useCamera] permissão de localização negada');
+        return null;
+      }
+      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest });
+      return { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+    } catch (err) {
+      console.error('[useCamera] erro ao obter localização', err);
+      return null;
+    }
+  };
+
+  const navigateToMapWith = async (uri: string) => {
+    try {
+      const coords = await requestLocation();
+      const query = [
+        `photoUri=${encodeURIComponent(uri)}`,
+        coords ? `lat=${coords.latitude}` : null,
+        coords ? `lng=${coords.longitude}` : null,
+      ]
+        .filter(Boolean)
+        .join('&');
+      // rota para app/Map.tsx -> '/map' (lowercase)
+      router.push(`/Map?${query}`);
+      console.log('[useCamera] router.push -> /map with', query);
     } catch (err) {
       console.error('[useCamera] router.push failed', err);
     }
   };
 
   const takePhoto = async () => {
-    console.log('[useCamera] takePhoto chamado');
     setIsLoading(true);
     try {
-      const ok = await requestPermissions();
+      const ok = await requestCameraPermission();
       if (!ok) {
         setIsLoading(false);
         return null;
@@ -45,11 +73,11 @@ export const useCamera = () => {
       });
 
       console.log('[useCamera] resultado da câmera', result);
+
       if (!result.canceled && result.assets?.[0]?.uri) {
         const uri = result.assets[0].uri;
         setImageUri(uri);
-        console.log('[useCamera] foto obtida:', uri);
-        navigateToRegisterdog(uri);
+        await navigateToMapWith(uri);
         setIsLoading(false);
         return uri;
       } else {
@@ -64,7 +92,6 @@ export const useCamera = () => {
   };
 
   const pickImage = async () => {
-    console.log('[useCamera] pickImage chamado');
     setIsLoading(true);
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -75,10 +102,11 @@ export const useCamera = () => {
       });
 
       console.log('[useCamera] resultado da galeria', result);
+
       if (!result.canceled && result.assets?.[0]?.uri) {
         const uri = result.assets[0].uri;
         setImageUri(uri);
-        navigateToRegisterdog(uri);
+        await navigateToMapWith(uri);
         setIsLoading(false);
         return uri;
       } else {

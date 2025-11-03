@@ -1,18 +1,38 @@
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import CameraButton from './components/CameraButton';
 import { InputField } from './components/InputField';
 
 const markers = [
-  { id: 1, latitude: -23.527, longitude: -46.933, icon: require('../assets/images/dog.png') },
-  { id: 2, latitude: -23.528, longitude: -46.934, icon: require('../assets/images/dog.png') },
-  // Adicione mais marcadores conforme necessário
+  { id: 1, dogId: 'A', latitude: -23.527, longitude: -46.933, icon: require('../assets/images/dog.png') },
+  { id: 3, dogId: 'A', latitude: -23.5265, longitude: -46.9345, icon: require('../assets/images/dog.png') },
+  { id: 2, dogId: 'B', latitude: -23.528, longitude: -46.934, icon: require('../assets/images/dog.png') },
 ];
 
 export default function Map() {
   const [search, setSearch] = useState('');
-  
+  const [selected, setSelected] = useState<any>(null);
+  const router = useRouter();
+
+  const handleMoreDetails = () => {
+    if (!selected) return;
+    // pega todos os pontos do mesmo dogId (rastro) e formata [{lat,lng},...]
+    const trail = markers
+      .filter(m => (selected.dogId ?? selected.id) === (m.dogId ?? m.id))
+      .sort((a, b) => a.id - b.id)
+      .map(m => ({ lat: m.latitude, lng: m.longitude }));
+    const params = {
+      dogId: selected.dogId ?? selected.id,
+      coords: encodeURIComponent(JSON.stringify(trail)),
+    };
+    router.push({
+      pathname: '/screens/DogDetailsScreen',
+      params,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -28,10 +48,12 @@ export default function Map() {
           <Marker
             key={marker.id}
             coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+            onPress={() => setSelected(marker)}
             image={marker.icon}
           />
         ))}
       </MapView>
+
       <View style={styles.bottomBar}>
         <View style={styles.inputFieldWrapper}>
           <InputField
@@ -41,9 +63,16 @@ export default function Map() {
             onChangeText={setSearch}
           />
         </View>
+
         <View style={styles.cameraButtonWrapper}>
           <CameraButton />
         </View>
+
+        {selected ? (
+          <TouchableOpacity style={styles.moreButton} onPress={handleMoreDetails}>
+            <Text style={styles.moreButtonText}>Mais detalhes</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
@@ -63,7 +92,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#95ACC3', // azul pastel
+    backgroundColor: '#95ACC3',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: 16,
@@ -72,10 +101,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
-    shadowRadius: 4,
     minHeight: 80,
   },
   inputFieldWrapper: {
@@ -85,5 +110,16 @@ const styles = StyleSheet.create({
   cameraButtonWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  moreButton: {
+    marginTop: 10,
+    backgroundColor: '#203D59',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  moreButtonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });

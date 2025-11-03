@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button } from '../components/Button';
@@ -29,7 +30,14 @@ const RegisterDogScreen: React.FC<RegisterDogScreenProps> = ({ photoUri }) => {
 
       <View style={styles.buttons}>
         <View style={styles.spacer} />
-        <Button title="Enviar registro" variant="primary" onPress={() => { /* enviar dados */ }} />
+        <Button
+          title="Enviar registro"
+          variant="primary"
+          onPress={() => {
+            // navegar para a tela de registro enviado
+            router.push('/screens/RegisterSentScreen');
+          }}
+        />
       </View>
     </ScrollView>
   );

@@ -7,6 +7,7 @@ export const Colors = {
   yellow: '#F0DDBD', // amarelo destaque
   white: '#FFFFFF',
   black: '#000000',
+  primary: '#203D59', // Added primary color
 };
 
 export default Colors;
