@@ -1,5 +1,5 @@
 
-# Fatec Frontend
+# DogSpotter Frontend
 
 Projeto frontend em TypeScript presente na pasta `app/`. Este repositório contém a interface do aplicativo (UI) construída com componentes React/TSX. O app aparenta ser uma aplicação mobile (React Native) que utiliza recursos de câmera, mapa e telas de registro — por exemplo: `CameraButton`, `Map.tsx`, e `RegisterDogScreen.tsx`.
 
