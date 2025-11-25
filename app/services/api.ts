@@ -1,10 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 
-// API Base URL - change this to your production URL when deploying
-const API_BASE_URL = 'http://localhost:3000/api';
+// API Base URL - reads from environment or uses default
+const API_BASE_URL = Constants.expoConfig?.extra?.apiUrl || 
+                     process.env.EXPO_PUBLIC_API_URL || 
+                     'http://localhost:3000/api';
 
 // For Android emulator, use: 'http://10.0.2.2:3000/api'
 // For physical device, use your computer's IP: 'http://192.168.x.x:3000/api'
+
+console.log('🔗 API URL:', API_BASE_URL);
 
 interface ApiResponse<T> {
   data?: T;
@@ -333,4 +338,3 @@ export interface User {
 // Export singleton instance
 export const api = new ApiService();
 export default api;
-
