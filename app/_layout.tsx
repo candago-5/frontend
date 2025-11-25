@@ -2,6 +2,7 @@ import { PlusJakartaSans_300Light_Italic, PlusJakartaSans_400Regular, PlusJakart
 import { Stack } from "expo-router";
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { AuthProvider } from './contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,28 +25,37 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen 
-        name="index" 
-        options={{ 
-          title: 'DogSpotter',
-          headerShown: false 
-        }} 
-      />
-      <Stack.Screen 
-        name="login" 
-        options={{ 
-          title: 'Login',
-          headerShown: false 
-        }} 
-      />
-      <Stack.Screen 
-        name="Map" 
-        options={{ 
-          title: 'Map',
-          headerShown: false 
-        }} 
-      />
-    </Stack>
+    <AuthProvider>
+      <Stack>
+        <Stack.Screen 
+          name="index" 
+          options={{ 
+            title: 'DogSpotter',
+            headerShown: false 
+          }} 
+        />
+        <Stack.Screen 
+          name="login" 
+          options={{ 
+            title: 'Login',
+            headerShown: false 
+          }} 
+        />
+        <Stack.Screen 
+          name="Map" 
+          options={{ 
+            title: 'Map',
+            headerShown: false 
+          }} 
+        />
+        <Stack.Screen 
+          name="registerdog" 
+          options={{ 
+            title: 'Registrar Cachorro',
+            headerShown: false 
+          }} 
+        />
+      </Stack>
+    </AuthProvider>
   );
 }
