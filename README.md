@@ -1,161 +1,117 @@
-<p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?size=28&duration=4000&color=36BCF7&center=true&vCenter=true&width=600&lines=🐶+Dog+Spotter+Frontend;Expo+React+Native+App;Candago+Building+Tech+" alt="Dog Spotter Frontend banner">
-</p>
 
----
+# Fatec Frontend
 
-![Repo Views](https://komarev.com/ghpvc/?username=candago-5&repo=frontend&label=Views&color=blue&style=flat)
-![GitHub top language](https://img.shields.io/github/languages/top/candago-5/frontend?style=flat&color=green)
-![GitHub last commit](https://img.shields.io/github/last-commit/candago-5/frontend?color=yellow)
+Projeto frontend em TypeScript presente na pasta `app/`. Este repositório contém a interface do aplicativo (UI) construída com componentes React/TSX. O app aparenta ser uma aplicação mobile (React Native) que utiliza recursos de câmera, mapa e telas de registro — por exemplo: `CameraButton`, `Map.tsx`, e `RegisterDogScreen.tsx`.
 
-![TypeScript](https://img.shields.io/badge/-TypeScript-333333?style=flat&logo=typescript)
-![Expo](https://img.shields.io/badge/-Expo-333333?style=flat&logo=expo)
-![React Native](https://img.shields.io/badge/-React%20Native-333333?style=flat&logo=react)
-![Node.js](https://img.shields.io/badge/-Node.js-333333?style=flat&logo=node.js)
-![Jest](https://img.shields.io/badge/-Jest-333333?style=flat&logo=jest)
+> Observação: algumas suposições foram feitas na documentação (ver seção "Assunções"). Se o projeto não for Expo/React Native, adapte os comandos de execução abaixo.
 
-# 🐶 Dog Spotter Frontend
+## Visão geral
 
-This is the mobile frontend for the Dog Spotter project - an [Expo](https://expo.dev) React Native app created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app) for locating and tracking dogs.
+- Linguagem: TypeScript
+- UI: React / React Native (arquivos `.tsx`)
+- Estrutura principal: pasta `app/` com telas e componentes
 
----
+O app parece gerenciar autenticação, registro de cães e uso de câmera/mapa.
 
-## ✅ Prerequisites
-- Node.js 18+ and npm (or pnpm/yarn)
-- Expo CLI: `npm install -g @expo/cli`
-- Mobile device with Expo Go app OR
-- Android/iOS simulator setup
+## Estrutura importante
 
----
+- `app/` — código fonte principal
+	- `_layout.tsx` — layout/aplicação global
+	- `index.tsx` — tela inicial
+	- `login.tsx` — tela de login
+	- `Map.tsx` — componente/tela do mapa
+	- `registerdog.tsx` — tela de registro de animal
+	- `components/` — componentes reutilizáveis (ex.: `Button.tsx`, `CameraButton.tsx`, `InputField.tsx`, `Logo.tsx`, `ProfileIcon.tsx`, `SearchBar.tsx`, `TabButton.tsx`)
+	- `contexts/` — contextos React (`AuthContext.tsx`, `NavigationContext.tsx`)
+	- `hooks/` — hooks personalizados (`useCamera.ts`)
+	- `screens/` — telas organizadas (`LoginScreen.tsx`, `OnboardingScreen.tsx`, `RegisterDogScreen.tsx`)
+	- `services/` — integração com backend (`api.ts`)
+- `assets/` — imagens e outros recursos estáticos
 
-## 📂 Project Structure
-- `app/` — main application code using Expo Router file-based routing
-- `assets/` — images, icons, and static assets
-- `components/` — reusable React Native components
-- `constants/` — app constants and configuration
-- `hooks/` — custom React hooks
-- `scripts/` — utility scripts
+## Requisitos
 
----
+- Node.js (versão compatível com o projeto)
+- npm ou yarn
+- Caso seja um app Expo: Expo CLI (opcional, ver observação abaixo)
 
-## 🚀 Getting Started
+## Instalação
 
-1. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-2. **Start the development server**
-
-   ```bash
-   npx expo start
-   ```
-
-3. **Run on device/simulator**
-
-   In the output, you'll find options to open the app in:
-   - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-   - [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-   - [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-   - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-   You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
----
-
-## 🔧 Available Scripts
+Abra um terminal na raiz do projeto e instale dependências:
 
 ```bash
-# Start development server
-npm start
+# usando npm
+npm install
 
-# Start with specific platform
-npm run android
-npm run ios
-npm run web
-
-# Reset project to blank state
-npm run reset-project
-
-# Run linter
-npm run lint
+# ou usando yarn
+yarn install
 ```
 
----
-
-## 🌐 API Integration
-
-This frontend connects to the Dog Spotter backend API. Make sure to:
-
-- Configure the API base URL in your environment configuration
-- Handle authentication with Bearer tokens (JWT)
-- Follow the API endpoints:
-  - `GET /health` → API health check
-  - `POST /auth/login` → User authentication
-  - `GET /dogs` → List dogs
-  - `POST /dogs` → Create dog entry
-
----
-
-## 🧪 Testing & Quality
+Se este projeto for gerenciado com Expo (observação baseada em `app.config.js`):
 
 ```bash
-# Run tests (when configured)
-npm test
+# instalar expo-cli globalmente (opcional)
+npm install -g expo-cli
 
-# Run linter
-npm run lint
-
-# Type checking
-npx tsc --noEmit
+# iniciar o projeto
+expo start
 ```
 
----
-
-## 📱 Development Tips
-
-### Get a Fresh Project
-When you're ready to start from scratch, run:
+Alternativamente, se `package.json` expõe scripts, use:
 
 ```bash
-npm run reset-project
+npm run start
+# ou
+yarn start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Para rodar em um emulador ou dispositivo (Expo):
 
-### Learn More
-To learn more about developing with Expo:
+```bash
+expo run:android
+expo run:ios
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Scripts úteis (exemplo)
 
-### Join the Community
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- `start` — inicia o modo de desenvolvimento
+- `build` — criar build de produção (se aplicável)
+- `lint` — executar linters
+- `test` — executar testes
+
+Verifique `package.json` para a lista exata de scripts disponíveis.
+
+## Notas de desenvolvimento
+
+- Componentes relacionados a câmera e mapa ficam em `app/components` e `app/` (ex.: `CameraButton.tsx`, `useCamera.ts` e `Map.tsx`).
+- Autenticação está centralizada em `app/contexts/AuthContext.tsx`.
+- Chamadas ao backend parecem estar em `app/services/api.ts`.
+
+### Convenções rápidas
+
+- Código em TypeScript (`.ts` / `.tsx`).
+- Componentes funcionais com hooks.
+- Use o contexto existente para autenticação/navegação onde aplicável.
+
+## Como contribuir
+
+1. Crie uma branch a partir da branch principal (ex.: `dev/fetchAll`).
+2. Abra um PR descrevendo a mudança.
+3. Siga as convenções de lint e formatação do projeto.
+
+## Assunções e próximos passos
+
+- Assumi que este é um projeto React Native com Expo gerenciando o app, devido à presença de `app.config.js` e uso de arquivos `.tsx` voltados a mobile (câmera, mapa). Se não for, ajuste os comandos de execução.
+- Sugestões de melhorias:
+	- Adicionar um `README` mais detalhado por tela (ex.: como testar a câmera e o fluxo de registro).
+	- Incluir `CONTRIBUTING.md` com padrões de commits, PR e CI.
+	- Adicionar linters (ESLint) e scripts de teste automatizados.
+
+## Licença
+
+Adicione aqui a licença do projeto (ex.: MIT) ou deixe conforme política do repositório.
 
 ---
-
-## 🤝 Contributing
-
-1. Create a feature branch: `git checkout -b feat/my-feature`
-2. Make your changes with clear, descriptive commits
-3. Test your changes on multiple platforms (iOS/Android)
-4. Open a Pull Request describing changes and testing steps
-
----
-
-## 👥 Team
-
-- 🤖 **Guilherme Teixeira** — Product Owner | [@GuilhermeCardoso0](https://github.com/Guilhermecardoso0)
-- 👨‍💻 **Caique Moura** — Scrum Master | [@caiquefrd](https://github.com/caiquefrd)
-- 💻 **Rafael Soares** — Developer | [@RafaelSM21](https://github.com/RafaelSM21)
-- 💻 **Luis Gustavo** — Developer | [@l-gustavo-barbosa](https://github.com/l-gustavo-barbosa)
-- 💻 **Lucas Jaques** — Developer | [@jaqueslucas](https://github.com/jaqueslucas)
-- 💻 **Lucas Assis** — Developer | [@Lucassis1](https://github.com/Lucassis1)
-
----
-
-<p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?size=24&duration=4000&color=FF5733&center=true&vCenter=true&width=500&lines=Candago+Building+Tech+" alt="Team signature">
-</p>
+Se quiser, eu posso:
+- checar o `package.json` e ajustar os comandos do README exatamente aos scripts existentes;
+- adicionar um `CONTRIBUTING.md` e um `CHANGELOG` mínimo;
+- ou gerar um `README` em inglês adicional.
