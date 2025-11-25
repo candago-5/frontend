@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -16,35 +18,118 @@ import { Logo } from '../components/Logo';
 import { TabButton } from '../components/TabButton';
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LoginScreenProps {
   onLoginSuccess?: () => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
+  const { login, register } = useAuth();
+  
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
-    if (onLoginSuccess) {
-      onLoginSuccess();
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleLogin = async () => {
+    // Validation
+    if (!email || !password) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert('Erro', 'Por favor, insira um email válido');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const result = await login(email, password);
+
+      if (result.success) {
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
+      } else {
+        Alert.alert('Erro', result.error || 'Erro ao fazer login');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao conectar com o servidor');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleRegister = () => {
-    console.log('Register:', { email, confirmEmail, password, confirmPassword });
+  const handleRegister = async () => {
+    // Validation
+    if (!email || !password || !confirmEmail || !confirmPassword) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert('Erro', 'Por favor, insira um email válido');
+      return;
+    }
+
+    if (email !== confirmEmail) {
+      Alert.alert('Erro', 'Os emails não coincidem');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Erro', 'As senhas não coincidem');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Erro', 'A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const result = await register(email, password);
+
+      if (result.success) {
+        Alert.alert('Sucesso', 'Conta criada com sucesso!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              if (onLoginSuccess) {
+                onLoginSuccess();
+              }
+            },
+          },
+        ]);
+      } else {
+        Alert.alert('Erro', result.error || 'Erro ao criar conta');
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao conectar com o servidor');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
-    console.log('Google login');
+    Alert.alert('Em breve', 'Login com Google será implementado em breve!');
   };
 
   const handleForgotPassword = () => {
-    console.log('Forgot password');
+    Alert.alert('Em breve', 'Recuperação de senha será implementada em breve!');
   };
 
   const handleBack = () => {
@@ -87,6 +172,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 icon="mail-outline"
                 value={email}
                 onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
               <InputField
                 placeholder="Senha"
@@ -103,12 +190,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                 icon="mail-outline"
                 value={email}
                 onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
               <InputField
                 placeholder="Confirme seu email"
                 icon="mail-outline"
                 value={confirmEmail}
                 onChangeText={setConfirmEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
               <InputField
                 placeholder="Senha"
@@ -145,11 +236,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
           )}
 
           <Button
-            title={activeTab === 'login' ? 'Entrar' : 'Criar conta'}
+            title={isLoading ? '' : (activeTab === 'login' ? 'Entrar' : 'Criar conta')}
             onPress={activeTab === 'login' ? handleLogin : handleRegister}
             variant="primary"
             style={styles.submitButton}
-          />
+            disabled={isLoading}
+          >
+            {isLoading && <ActivityIndicator color="#fff" />}
+          </Button>
 
           <View style={styles.separatorContainer}>
             <Text style={styles.separatorText}>ou entrar com</Text>
