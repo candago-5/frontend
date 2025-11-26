@@ -97,20 +97,6 @@ Verifique `package.json` para a lista exata de scripts disponíveis.
 2. Abra um PR descrevendo a mudança.
 3. Siga as convenções de lint e formatação do projeto.
 
-## Assunções e próximos passos
-
-- Assumi que este é um projeto React Native com Expo gerenciando o app, devido à presença de `app.config.js` e uso de arquivos `.tsx` voltados a mobile (câmera, mapa). Se não for, ajuste os comandos de execução.
-- Sugestões de melhorias:
-	- Adicionar um `README` mais detalhado por tela (ex.: como testar a câmera e o fluxo de registro).
-	- Incluir `CONTRIBUTING.md` com padrões de commits, PR e CI.
-	- Adicionar linters (ESLint) e scripts de teste automatizados.
-
 ## Licença
 
-Adicione aqui a licença do projeto (ex.: MIT) ou deixe conforme política do repositório.
-
----
-Se quiser, eu posso:
-- checar o `package.json` e ajustar os comandos do README exatamente aos scripts existentes;
-- adicionar um `CONTRIBUTING.md` e um `CHANGELOG` mínimo;
-- ou gerar um `README` em inglês adicional.
+Este projeto está sob a licença MIT.
