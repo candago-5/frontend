@@ -3,7 +3,6 @@
 
 Projeto frontend em TypeScript presente na pasta `app/`. Este repositório contém a interface do aplicativo (UI) construída com componentes React/TSX. O app aparenta ser uma aplicação mobile (React Native) que utiliza recursos de câmera, mapa e telas de registro — por exemplo: `CameraButton`, `Map.tsx`, e `RegisterDogScreen.tsx`.
 
-> Observação: algumas suposições foram feitas na documentação (ver seção "Assunções"). Se o projeto não for Expo/React Native, adapte os comandos de execução abaixo.
 
 ## Visão geral
 
